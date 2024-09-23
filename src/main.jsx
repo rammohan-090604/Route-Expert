@@ -9,6 +9,7 @@ import Layout from './Layout';
 import Contact from './pages/Contact';
 import Courses from './pages/Courses';
 import FAQ from './pages/FAQ';
+import DisplayData from './pages/DisplayData';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "faq",
         element: <FAQ />,
+      },
+      {
+        path: "/displaydata",
+        element: <DisplayData />,
       }
     ]
   }
