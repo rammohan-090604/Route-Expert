@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         element: <FAQ />,
       },
       {
-        path: "/displaydata",
+        path: "displaydata",
         element: <DisplayData />,
       }
     ]

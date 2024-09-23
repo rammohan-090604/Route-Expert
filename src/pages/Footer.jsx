@@ -129,7 +129,7 @@ function Footer() {
 
             <div className="mt-16 sm:flex sm:items-center sm:justify-between">
                 <div className="flex justify-center text-blue-600 sm:justify-start">
-                    <h1 className="text-2xl font-bold">Madhu Tech Skills</h1>
+                    <h1 className="text-2xl font-bold">Madhu Tech <Link to="/displaydata" >Skills</Link></h1>
                 </div>
 
                 <p className="mt-4 text-center text-sm text-gray-500 sm:mt-0 sm:text-right">
