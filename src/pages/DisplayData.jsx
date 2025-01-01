@@ -13,7 +13,7 @@ const DisplayData = () => {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('https://mts-backend-4hmu.onrender.com/api/data');
+            const response = await fetch('http://localhost:8000/api/data');
             const jsonData = await response.json();
             setData(jsonData);
         } catch (error) {
@@ -22,16 +22,16 @@ const DisplayData = () => {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: true,
-                className: "toast-custom", // Apply custom class
+                className: "toast-custom",
               });
         } finally {
-            setLoading(false); // End loading after data fetch
+            setLoading(false); 
         }
     };
 
     const markAsChecked = async (id) => {
         try {
-            const response = await fetch('https://mts-backend-4hmu.onrender.com/api/updateChecked', {
+            const response = await fetch('http://localhost:8000/api/updateChecked', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

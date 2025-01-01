@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {},
+    animation: {
+      'scroll-left': 'scroll-left 20s linear infinite',
+      'scroll-right': 'scroll-right 20s linear infinite',
+    },
   },
   plugins: [],
 }

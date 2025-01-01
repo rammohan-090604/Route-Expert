@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import mtslogo from '../assets/mtslogo.png';
-import { Link } from 'react-router-dom';
+import mtslogo from '../assets/mtslogo.svg';
+import {Link} from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'; 
 import '../styles/navbar.css';
 
 function Navbar() {
@@ -11,39 +13,96 @@ function Navbar() {
     const closeMenu = () => setIsOpen(false);
 
     return (
-        <header className="external bg-opacity-70 shadow-md fixed w-100">
+        <header className="external bg-white shadow-md fixed w-100">
             <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-20 items-center justify-between">
                     <div className="md:flex md:items-center md:gap-12">
-                        <Link to="/">
-                        <img className="h-14 w-auto object-contain" src={mtslogo} alt='MTSLOGO' />
-                        </Link>
+                        <div className='flex items-center gap-2'>
+                            <Link to="/" smooth={true} offset={-70} duration={500}>
+                                <img className="h-12 w-auto object-contain" src={mtslogo} alt='MTSLOGO' />
+                            </Link>
+                            <p className='text-3xl' >Code IT</p>
+                        </div>
                     </div>
                     <div className="hidden md:block">
                         <nav aria-label="Global">
                             <ul className="flex items-center gap-6 text-sm">
-                                <li><Link className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-blue-700" to="/">Home</Link></li>
-                                <li><Link className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-blue-700" to="/about">About</Link></li>
-                                <li><Link className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-blue-700" to="/courses">Courses</Link></li>
-                                <li><Link className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-blue-700" to="/faq">FAQ</Link></li>
+                                <li>
+                                    <ScrollLink 
+                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        to="home" 
+                                        smooth={true} 
+                                        offset={-70} 
+                                        duration={500}
+                                    >
+                                        Home
+                                    </ScrollLink>
+                                </li>
+                                <li>
+                                    <ScrollLink 
+                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        to="about" 
+                                        smooth={true} 
+                                        offset={-70} 
+                                        duration={500}
+                                    >
+                                        About
+                                    </ScrollLink>
+                                </li>
+                                <li>
+                                    <ScrollLink 
+                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        to="docs" 
+                                        smooth={true} 
+                                        offset={-70} 
+                                        duration={500}
+                                    >
+                                        Docs
+                                    </ScrollLink>
+                                </li>
+                                <li>
+                                    <ScrollLink 
+                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        to="faq" 
+                                        smooth={true} 
+                                        offset={-70} 
+                                        duration={500}
+                                    >
+                                        FAQ
+                                    </ScrollLink>
+                                </li>
+                                <li>
+                                    <Link className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        to="/product" 
+                                        smooth={true} 
+                                        offset={-70} 
+                                        duration={500} >
+                                            Product
+                                    </Link>
+                                </li>
                             </ul>
                         </nav>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <div className="sm:flex sm:gap-4">
-                            <Link
-                                className="rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-white shadow"
-                                to="/contactus"
-                            >
-                                Contact
-                            </Link>
+                            {/* Clerk Authentication Button */}
+                            <SignedOut>
+                                <SignInButton>
+                                    <button className="rounded-md bg-black px-5 py-2.5 text-sm font-medium text-white shadow cursor-pointer">
+                                        Login
+                                    </button>
+                                </SignInButton>
+                            </SignedOut>
+                            <SignedIn>
+                                <UserButton />
+                            </SignedIn>
                         </div>
 
                         <div className="block md:hidden">
                             <button 
                                 onClick={toggleMenu} 
-                                className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75"
+                                className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75 cursor-pointer"
                             >
                                 {isOpen ? (
                                     <svg
@@ -75,7 +134,7 @@ function Navbar() {
 
                 <nav
                     aria-label="Global"
-                    className={`fixed inset-0 bg-blue-600 transition-transform transform ${
+                    className={`fixed inset-0 bg-black transition-transform transform ${
                         isOpen ? 'translate-y-0' : 'translate-y-full'
                     } md:hidden`}
                 >
@@ -93,18 +152,66 @@ function Navbar() {
                             </svg>
                         </button>
                     </div>
-                    <ul className="flex flex-col items-end bg-blue-600 text-white mt-8 space-y-6">
+                    <ul className="flex flex-col items-end bg-black text-white mt-8 space-y-6">
                         <li className="w-full">
-                            <Link className="block px-4 py-2 text-lg hover:bg-blue-700" to="/" onClick={closeMenu}>Home</Link>
+                            <ScrollLink 
+                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer" 
+                                to="home" 
+                                smooth={true} 
+                                offset={-70} 
+                                duration={500}
+                                onClick={closeMenu}
+                            >
+                                Home
+                            </ScrollLink>
                         </li>
                         <li className="w-full">
-                            <Link className="block px-4 py-2 text-lg hover:bg-blue-700" to="/about" onClick={closeMenu}>About</Link>
+                            <ScrollLink 
+                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer" 
+                                to="about" 
+                                smooth={true} 
+                                offset={-70} 
+                                duration={500}
+                                onClick={closeMenu}
+                            >
+                                About
+                            </ScrollLink>
                         </li>
                         <li className="w-full">
-                            <Link className="block px-4 py-2 text-lg hover:bg-blue-700" to="/courses" onClick={closeMenu}>Courses</Link>
+                            <ScrollLink 
+                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer" 
+                                to="docs" 
+                                smooth={true} 
+                                offset={-70} 
+                                duration={500}
+                                onClick={closeMenu}
+                            >
+                                Docs
+                            </ScrollLink>
                         </li>
                         <li className="w-full">
-                            <Link className="block px-4 py-2 text-lg hover:bg-blue-700" to="/faq" onClick={closeMenu}>FAQ</Link>
+                            <ScrollLink 
+                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer" 
+                                to="faq" 
+                                smooth={true} 
+                                offset={-70} 
+                                duration={500}
+                                onClick={closeMenu}
+                            >
+                                FAQ
+                            </ScrollLink>
+                        </li>
+                        <li className="w-full">
+                            <Link 
+                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer" 
+                                to="/product" 
+                                smooth={true} 
+                                offset={-70} 
+                                duration={500}
+                                onClick={closeMenu}
+                            >
+                                Product
+                            </Link>
                         </li>
                     </ul>
                 </nav>
