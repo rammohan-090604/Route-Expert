@@ -12,9 +12,11 @@ const Product = () => {
   const [errorMessage, setErrorMessage] = useState(""); // For error handling
   const { user } = useUser(); // Get the user info from Clerk
 
+  const BACKEND_URL = import.meta.env.REACT_APP_BACKEND_URL;
+
   const handleEditorChange = (value) => {
     setCode(value);
-    console.log("Code updated:", value);
+    // console.log("Code updated:", value);
   };
 
   const handleLanguageChange = (event) => {
@@ -30,7 +32,7 @@ const Product = () => {
 
     const email = user.emailAddresses[0].emailAddress;
     try {
-      const response = await fetch(`http://localhost:8000/api/getCodeNamesAndLanguages?email=${email}`);
+      const response = await fetch(`${BACKEND_URL}/api/getCodeNamesAndLanguages?email=${email}`);
       const result = await response.json();
 
       if (response.ok) {
@@ -99,7 +101,7 @@ const Product = () => {
 
     try {
       // Send the userData to the backend using a POST request
-      const response = await fetch('http://localhost:8000/api/submitCode', {
+      const response = await fetch(`${BACKEND_URL}/api/submitCode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
