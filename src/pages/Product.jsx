@@ -148,7 +148,7 @@ const Product = () => {
         pauseOnHover 
       />
       {/* Header Section */}
-      <div className="mt-28 w-10/12 max-w-6xl flex justify-between items-center p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+      <div className="mt-12 w-10/12 max-w-6xl flex justify-between items-center p-4 bg-gray-800 text-white rounded-lg shadow-lg">
         {/* Language Dropdown */}
         <div>
           <label htmlFor="language-select" className="mr-2">Select Language:</label>
@@ -179,7 +179,7 @@ const Product = () => {
       </div>
 
       {/* Monaco Editor */}
-      <div className="mt-6 w-10/12 max-w-6xl flex-grow p-4 bg-white rounded-lg shadow-lg">
+      <div className="mt-4 w-10/12 max-w-6xl flex-grow p-4 bg-white rounded-lg shadow-lg">
         <Editor
           height="calc(100vh - 180px)" // Adjust height to fit inside the container
           defaultLanguage="javascript" // Initial default language

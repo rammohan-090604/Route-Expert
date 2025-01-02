@@ -5,8 +5,7 @@ import './index.css';
 import Home from './pages/Home';
 import Error from './pages/Error';
 import Layout from './Layout';
-import Product from './pages/Product';
-import { ToastContainer, toast } from 'react-toastify';
+import Manager from './pages/Manager';
 import 'react-toastify/dist/ReactToastify.css';
 import { ClerkProvider } from '@clerk/clerk-react'
 
@@ -29,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path : "/product",
-        element: <Product />,
+        element: <Manager />,
       }
     ]
   }
