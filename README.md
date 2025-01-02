@@ -15,7 +15,7 @@ This is the frontend for our educational platform, designed to provide users wit
 ## Features
 - User-friendly interface
 - Responsive design
-- Course listings with detailed descriptions
+- Docs for better understanding
 - FAQs section
 - Contact and support options
 - Beautiful animations and effects

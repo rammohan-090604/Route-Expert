@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import Error from './pages/Error';
 import Layout from './Layout';
 import Product from './pages/Product';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { ClerkProvider } from '@clerk/clerk-react'
 
 
@@ -35,8 +37,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider 
+      publishableKey={PUBLISHABLE_KEY} 
+      frontendApi="your-clerk-frontend-api"
+      afterSignOutUrl="/" >
       <RouterProvider router={router} />
     </ClerkProvider>
+
   </React.StrictMode>,
 );
