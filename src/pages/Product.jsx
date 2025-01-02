@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import { useUser } from '@clerk/clerk-react';
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS
 
 const Product = () => {
   const [code, setCode] = useState("// Write your code here");
@@ -22,7 +24,7 @@ const Product = () => {
   // Function to check if the code name already exists in the user's saved codes
   const checkCodeNameExists = async (name) => {
     if (!user) {
-      alert("Please log in first.");
+      toast.info("Please log in first.");
       return false;
     }
 
@@ -36,12 +38,12 @@ const Product = () => {
         const nameExists = result.some(code => code.name === name);
         return nameExists;
       } else {
-        alert(result.message || "Error checking code names.");
+        toast.error(result.message || "Error checking code names.");
         return false;
       }
     } catch (error) {
       console.error("Error checking code names:", error);
-      alert("An error occurred while checking code names.");
+      toast.error("An error occurred while checking code names.");
       return false;
     }
   };
@@ -109,10 +111,10 @@ const Product = () => {
 
       if (response.ok) {
         // If the request is successful, display success message
-        alert(result.message || "Code saved successfully!");
+        toast.success(result.message || "Code saved successfully!");
       } else {
         // If the request fails, display error message
-        alert(result.message || "Error saving code. Please try again.");
+        toast.error(result.message || "Error saving code. Please try again.");
       }
     } catch (error) {
       // Handle network or other errors
@@ -134,6 +136,17 @@ const Product = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
+      <ToastContainer 
+        position="top-center" 
+        autoClose={1000} 
+        hideProgressBar={true} 
+        newestOnTop={true} 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover 
+      />
       {/* Header Section */}
       <div className="mt-28 w-10/12 max-w-6xl flex justify-between items-center p-4 bg-gray-800 text-white rounded-lg shadow-lg">
         {/* Language Dropdown */}
