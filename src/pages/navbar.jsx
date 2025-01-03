@@ -209,13 +209,15 @@ function Navbar() {
                                 FAQ
                             </ScrollLink>
                         </li>
-                        <li className="w-full">
-                            <button
-                                onClick={handleProductClick}  // Use the new click handler here
-                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
-                            >
-                                Product
-                            </button>
+                        <li className="w-full ">
+                            <ScrollLink onClick={closeMenu}>
+                                <button
+                                    onClick={handleProductClick}  // Use the new click handler here
+                                    className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
+                                >
+                                    Product
+                                </button>
+                            </ScrollLink>
                         </li>
                     </ul>
                 </nav>
