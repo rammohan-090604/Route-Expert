@@ -5,7 +5,6 @@ import './index.css';
 import Home from './pages/Home';
 import Error from './pages/Error';
 import Layout from './Layout';
-import Manager from './pages/Manager';
 import 'react-toastify/dist/ReactToastify.css';
 import { ClerkProvider } from '@clerk/clerk-react'
 
@@ -25,10 +24,6 @@ const router = createBrowserRouter([
       {
         path: "", // The root path, which points to the Home component
         element: <Home />,  // This component will contain all the sections
-      },
-      {
-        path : "/product",
-        element: <Manager />,
       }
     ]
   }

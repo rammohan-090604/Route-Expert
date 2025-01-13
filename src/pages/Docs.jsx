@@ -1,118 +1,76 @@
 import React from 'react';
-import { Code2 } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
-// Define the EditorWindow component
-function EditorWindow({ fileName, children }) {
+// Docs Function Component with improved design
+function Docs() {
   return (
-    <div className="bg-[#1e1e1e] rounded-lg overflow-hidden shadow-xl h-full flex flex-col border border-[#2d2d2d]">
-      <div className="flex items-center justify-between px-3 py-2 bg-[#2d2d2d]">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 flex items-center justify-center">
-            <div className="w-4 h-4 bg-[#3178c6] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-              TS
+    <section id="docs" className="bg-green-50 py-24 bg-gray-50">
+      <div className="container mx-auto px-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Header Section */}
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+              Documentation
+            </h2>
+            <p className="text-xl text-gray-600">
+              Learn how to use the Route Optimization Platform effectively and unlock its full potential.
+            </p>
+          </div>
+
+          {/* Content Section */}
+          <div className="space-y-12">
+            {/* Getting Started */}
+            <div className="bg-white shadow-lg rounded-lg p-8 space-y-6 border-l-4 border-green-500">
+              <h3 className="text-3xl font-semibold text-gray-900">Getting Started</h3>
+              <p className="text-gray-600">
+                To get started with our platform, simply sign up, log in, and you'll be able to begin optimizing your routes
+                by entering your destinations, vehicle data, and preferences.
+              </p>
+              <p className="text-gray-600">
+                Once you've entered the necessary information, our powerful algorithm will optimize the routes for you, saving
+                time and reducing costs.
+              </p>
+            </div>
+
+            {/* Features */}
+            <div className="bg-white shadow-lg rounded-lg p-8 space-y-6 border-l-4 border-green-500">
+              <h3 className="text-3xl font-semibold text-gray-900">Key Features</h3>
+              <ul className="list-disc pl-5 text-gray-600 space-y-2">
+                <li>Real-time traffic integration to avoid congestion and delays.</li>
+                <li>Multi-vehicle optimization for better fleet management.</li>
+                <li>Custom time window settings for delivery scheduling.</li>
+                <li>Support for up to 100 stops per route (unlimited stops on enterprise plans).</li>
+                <li>Automatic route recalculation every 5 minutes based on real-time conditions.</li>
+              </ul>
+            </div>
+
+            {/* Advanced Features */}
+            <div className="bg-white shadow-lg rounded-lg p-8 space-y-6 border-l-4 border-green-500">
+              <h3 className="text-3xl font-semibold text-gray-900">Advanced Features</h3>
+              <ul className="list-disc pl-5 text-gray-600 space-y-2">
+                <li>Set vehicle types, capacities, and constraints for accurate route optimization.</li>
+                <li>Configure specific time windows for each stop to ensure punctual deliveries.</li>
+                <li>Support for custom route optimization parameters tailored to your business needs.</li>
+              </ul>
+            </div>
+
+            {/* CTA Section */}
+            <div className="text-center mt-12">
+              <p className="text-gray-600 mb-4">
+                Ready to start optimizing your routes and improving efficiency? Get started now!
+              </p>
+              <button
+                onClick={() => toast.info("Let's get started with your optimization!")}
+                className="inline-flex items-center px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-semibold"
+              >
+                Start Optimizing
+                <ChevronRight className="ml-2 w-5 h-5" />
+              </button>
             </div>
           </div>
-          <span className="text-sm text-gray-300 font-medium">{fileName}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="text-gray-400 hover:text-gray-200">−</button>
-          <button className="text-gray-400 hover:text-gray-200">□</button>
-          <button className="text-gray-400 hover:text-gray-200">×</button>
         </div>
       </div>
-      <div className="p-4 flex-1">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// Define the CodeImage component
-function CodeImage({ gradient }) {
-  return (
-    <div className={`rounded-lg p-6 h-full ${gradient}`}>
-      <EditorWindow fileName="hello.ts">
-        <div className="font-mono text-sm leading-6">
-          <span className="text-[#c586c0]">function</span>{" "}
-          <span className="text-[#dcdcaa]">hello</span>
-          <span className="text-gray-300">(</span>
-          <span className="text-[#9cdcfe]">name</span>
-          <span className="text-gray-300">:</span>{" "}
-          <span className="text-[#4ec9b0]">string</span>
-          <span className="text-gray-300">) {`{`}</span>
-          <br />
-          <span className="text-gray-300 ml-4">console.</span>
-          <span className="text-[#dcdcaa]">log</span>
-          <span className="text-gray-300">(</span>
-          <span className="text-[#ce9178]">'Hi '</span>
-          <span className="text-gray-300"> + </span>
-          <span className="text-[#9cdcfe]">name</span>
-          <span className="text-gray-300">);</span>
-          <br />
-          <span className="text-gray-300">{`}`}</span>
-        </div>
-      </EditorWindow>
-    </div>
-  );
-}
-
-// Define the ScrollingRow component
-function ScrollingRow({ direction, gradients }) {
-  return (
-    <div className="relative h-[300px] overflow-hidden py-8">
-      <div
-        className={`flex gap-4 absolute h-full ${direction === 'left' ? 'animate-scroll-left' : 'animate-scroll-right'}`}
-        style={{
-          width: '100%',
-        }}
-      >
-        {/* Duplicate the gradients for seamless scrolling */}
-        {[...gradients, ...gradients].map((gradient, index) => (
-          <div key={index} className="w-[300px] h-full flex-shrink-0">
-            <CodeImage gradient={gradient} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Main Docs component
-function Docs() {
-  const row1Gradients = [
-    'bg-gradient-to-br from-pink-300 to-orange-300',
-    'bg-gradient-to-br from-teal-300 to-emerald-300',
-    'bg-gradient-to-br from-purple-300 to-red-300',
-    'bg-gradient-to-br from-blue-300 to-indigo-300',
-  ];
-
-  const row2Gradients = [
-    'bg-gradient-to-br from-violet-300 to-fuchsia-300',
-    'bg-gradient-to-br from-yellow-300 to-amber-300',
-    'bg-gradient-to-br from-sky-300 to-blue-300',
-    'bg-gradient-to-br from-rose-300 to-pink-300',
-  ];
-
-  return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center overflow-hidden">
-      <div className="text-center mb-12 px-4 mt-12">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Code2 className="w-8 h-8 text-teal-400" />
-          <h1 className="text-6xl font-bold text-white">Code Showcase</h1>
-        </div>
-        <h2 className="text-4xl font-bold text-white mb-2">
-          Because your code deserves
-        </h2>
-        <p className="text-4xl font-bold bg-gradient-to-r from-teal-400 to-emerald-400 text-transparent bg-clip-text">
-          a stunning presentation
-        </p>
-      </div>
-
-      <div className="w-full h-full">
-        <ScrollingRow direction="left" gradients={row1Gradients} />
-        <ScrollingRow direction="right" gradients={row2Gradients} />
-      </div>
-    </div>
+    </section>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import mtslogo from '../assets/mtslogo.svg';
+import logo from '../assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink } from 'react-scroll';
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser, useClerk } from '@clerk/clerk-react';
@@ -30,17 +30,17 @@ function Navbar() {
             <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-20 items-center justify-between">
                     <div className="md:flex md:items-center md:gap-12">
-                            <Link className='flex items-center gap-2' to="/" smooth={true} offset={-70} duration={500}>
-                                <img className="h-12 w-auto object-contain" src={mtslogo} alt='MTSLOGO' />
-                                <p className='text-3xl' >Code IT</p>
-                            </Link>
-                        </div>
+                        <Link className='flex items-center gap-2' to="/" smooth={true} offset={-70} duration={500}>
+                            <img className="h-12 w-auto object-contain" src={logo} alt='LOGO' />
+                            <p className='text-3xl font-semibold '>RE</p>
+                        </Link>
+                    </div>
                     <div className="hidden md:block">
                         <nav aria-label="Global">
-                            <ul className="flex items-center gap-6 text-sm">
+                            <ul className="flex items-center gap-6 text-sm text-gray-700">
                                 <li>
                                     <ScrollLink
-                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        className="text-lg font-medium tracking-wider transition hover:text-green-700 cursor-pointer"
                                         to="home"
                                         smooth={true}
                                         offset={-70}
@@ -51,7 +51,7 @@ function Navbar() {
                                 </li>
                                 <li>
                                     <ScrollLink
-                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        className="text-lg font-medium tracking-wider transition hover:text-green-700 cursor-pointer"
                                         to="about"
                                         smooth={true}
                                         offset={-70}
@@ -62,7 +62,7 @@ function Navbar() {
                                 </li>
                                 <li>
                                     <ScrollLink
-                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        className="text-lg font-medium tracking-wider transition hover:text-green-700 cursor-pointer"
                                         to="docs"
                                         smooth={true}
                                         offset={-70}
@@ -73,7 +73,7 @@ function Navbar() {
                                 </li>
                                 <li>
                                     <ScrollLink
-                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        className="text-lg font-medium tracking-wider transition hover:text-green-700 cursor-pointer"
                                         to="faq"
                                         smooth={true}
                                         offset={-70}
@@ -85,7 +85,7 @@ function Navbar() {
                                 <li>
                                     <button
                                         onClick={handleProductClick}  // Use the new click handler here
-                                        className="text-gray-500 text-lg font-medium tracking-wider transition hover:text-black cursor-pointer"
+                                        className="text-lg font-medium tracking-wider transition hover:text-green-700 cursor-pointer"
                                     >
                                         Product
                                     </button>
@@ -99,7 +99,7 @@ function Navbar() {
                             {/* Clerk Authentication Button */}
                             <SignedOut>
                                 <SignInButton>
-                                    <button className="rounded-md bg-black px-5 py-2.5 text-sm font-medium text-white shadow cursor-pointer">
+                                    <button className="rounded-md bg-green-600 px-5 py-2.5 text-sm font-medium text-white shadow cursor-pointer hover:bg-green-700">
                                         Login
                                     </button>
                                 </SignInButton>
@@ -112,7 +112,7 @@ function Navbar() {
                         <div className="block md:hidden">
                             <button
                                 onClick={toggleMenu}
-                                className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75 cursor-pointer"
+                                className="rounded bg-green-100 p-2 text-green-600 transition hover:text-green-500 cursor-pointer"
                             >
                                 {isOpen ? (
                                     <svg
@@ -144,10 +144,10 @@ function Navbar() {
 
                 <nav
                     aria-label="Global"
-                    className={`fixed inset-0 bg-black transition-transform transform ${isOpen ? 'translate-y-0' : 'translate-y-full'} md:hidden`}
+                    className={`fixed inset-0 bg-white transition-transform transform ${isOpen ? 'translate-y-0' : 'translate-y-full'} md:hidden`}
                 >
                     <div className="flex justify-end p-4">
-                        <button onClick={toggleMenu} className="text-white">
+                        <button onClick={toggleMenu} className="text-green-600">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="w-6 h-6"
@@ -160,10 +160,10 @@ function Navbar() {
                             </svg>
                         </button>
                     </div>
-                    <ul className="flex flex-col items-end bg-black text-white mt-8 space-y-6">
+                    <ul className="flex flex-col items-end bg-white text-gray-700 mt-8 space-y-6">
                         <li className="w-full">
                             <ScrollLink
-                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
+                                className="block px-4 py-2 text-lg hover:bg-gray-100 cursor-pointer"
                                 to="home"
                                 smooth={true}
                                 offset={-70}
@@ -175,7 +175,7 @@ function Navbar() {
                         </li>
                         <li className="w-full">
                             <ScrollLink
-                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
+                                className="block px-4 py-2 text-lg hover:bg-gray-100 cursor-pointer"
                                 to="about"
                                 smooth={true}
                                 offset={-70}
@@ -187,7 +187,7 @@ function Navbar() {
                         </li>
                         <li className="w-full">
                             <ScrollLink
-                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
+                                className="block px-4 py-2 text-lg hover:bg-gray-100 cursor-pointer"
                                 to="docs"
                                 smooth={true}
                                 offset={-70}
@@ -199,7 +199,7 @@ function Navbar() {
                         </li>
                         <li className="w-full">
                             <ScrollLink
-                                className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
+                                className="block px-4 py-2 text-lg hover:bg-gray-100 cursor-pointer"
                                 to="faq"
                                 smooth={true}
                                 offset={-70}
@@ -213,7 +213,7 @@ function Navbar() {
                             <ScrollLink onClick={closeMenu}>
                                 <button
                                     onClick={handleProductClick}  // Use the new click handler here
-                                    className="block px-4 py-2 text-lg hover:bg-gray-700 cursor-pointer"
+                                    className="block px-4 py-2 text-lg hover:bg-gray-100 cursor-pointer"
                                 >
                                     Product
                                 </button>

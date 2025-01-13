@@ -36,7 +36,7 @@ function Footer() {
           <ul className="flex justify-center gap-6 sm:justify-center">
             <li>
               <a
-                href="https://www.facebook.com/MadhuTechSkills/"
+                href="https://www.facebook.com/"
                 rel="noreferrer"
                 target="_blank"
                 className="text-white transition hover:text-gray-400"
@@ -54,7 +54,7 @@ function Footer() {
 
             <li>
               <a
-                href="https://www.instagram.com/madhutechskills/"
+                href="https://www.instagram.com/"
                 rel="noreferrer"
                 target="_blank"
                 className="text-white transition hover:text-gray-400"
