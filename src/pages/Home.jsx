@@ -6,6 +6,22 @@ import { MapPin, ChevronRight, Zap, Clock, Target, TrendingUp, Users } from 'luc
 import Docs from './Docs';
 import FAQ from './FAQ';
 
+function FeatureCard({ icon, title, description }) {
+  return (
+    <div className="group p-8 bg-white rounded-xl border border-gray-100 hover:border-green-500 transition-all duration-300 hover:shadow-lg">
+      <div className="mb-6 inline-block p-4 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
+      <p className="text-gray-600 mb-4">{description}</p>
+      <div className="flex items-center text-green-600 group-hover:text-green-700">
+        <span className="text-sm font-medium">Learn more</span>
+        <ChevronRight className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+      </div>
+    </div>
+  );
+}
+
 function Hero() {
   const { isSignedIn } = useUser();
   const { openSignUp } = useClerk();
@@ -234,6 +250,5 @@ function Hero() {
   );
 }
 
-l
 
 export default Hero;
