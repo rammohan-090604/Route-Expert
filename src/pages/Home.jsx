@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import the CSS
 import { MapPin, ChevronRight, Zap, Clock, Target, TrendingUp, Users } from 'lucide-react'; 
 import Docs from './Docs';
 import FAQ from './FAQ';
+import { Link } from 'react-router-dom';
 
 function FeatureCard({ icon, title, description }) {
   return (
@@ -57,12 +58,14 @@ function Hero() {
               Join 37k+ users optimizing their journeys with our intelligent route planning algorithm. Save time, reduce costs, and travel efficiently.
             </p>
             <div className="flex space-x-4">
-              <button 
-                onClick={() => toast.info("Try our route planner soon!")}
-                className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center"
-              >
-                Start Planning <ChevronRight className="ml-2 h-5 w-5" />
-              </button>
+              <Link to="/product">
+                <button 
+                  onClick={() => toast.info("Try our route planner soon!")}
+                  className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                >
+                  Start Planning <ChevronRight className="ml-2 h-5 w-5" />
+                </button>
+                </Link>
               <button className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:border-green-600 hover:text-green-600 transition-colors">
                 Learn More
               </button>

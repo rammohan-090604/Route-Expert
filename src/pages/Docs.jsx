@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 
 // Docs Function Component with improved design
 function Docs() {
