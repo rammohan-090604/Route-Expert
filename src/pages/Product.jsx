@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as maptilersdk from "@maptiler/sdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Map() {
   const [start, setStart] = useState(""); // Start Location
@@ -12,8 +14,6 @@ export default function Map() {
   const map = useRef(null);
   const markers = useRef([]); // To track all markers
   const zoom = 1;
-
-  console.log(start, middlePoints, end);
 
   // Replace with your MapTiler API Key
   maptilersdk.config.apiKey = import.meta.env.REACT_APP_MAPTILER_API_KEY;
@@ -54,7 +54,7 @@ export default function Map() {
           const [lon, lat] = data.features[0].geometry.coordinates;
 
           // Add marker to the map
-          const marker = new maptilersdk.Marker({ color: "#FF0000" })
+          const marker = new maptilersdk.Marker({ color: "#00FF00" })
             .setLngLat([lon, lat])
             .addTo(map.current);
           markers.current.push(marker);
@@ -62,10 +62,10 @@ export default function Map() {
           // Extend map bounds to include this marker
           bounds.extend([lon, lat]);
         } else {
-          console.log(`Place "${location}" not found`);
+          toast.error(`Place "${location}" not found.`);
         }
       } catch (error) {
-        console.error(`Error fetching coordinates for "${location}":`, error);
+        toast.error(`Error fetching coordinates for "${location}": ${error}`);
       }
     }
 
@@ -76,6 +76,9 @@ export default function Map() {
         maxZoom: 10, // Set a maximum zoom level
         duration: 1500, // Smooth transition duration in milliseconds
       });
+      toast.success("Markers added and map adjusted!");
+    } else {
+      toast.error("No valid locations to map!");
     }
   };
 
@@ -90,14 +93,16 @@ export default function Map() {
   const addMiddlePoint = () => {
     if (middlePoints.length < 10) {
       setMiddlePoints([...middlePoints, ""]);
+      toast.info("Added a new middle point.");
     } else {
-      alert("You can only add up to 10 middle points.");
+      toast.error("You can only add up to 10 middle points.");
     }
   };
 
   // Remove a middle point input field
   const removeMiddlePoint = (index) => {
     setMiddlePoints(middlePoints.filter((_, i) => i !== index));
+    toast.info("Middle point removed.");
   };
 
   // Toggle form visibility
@@ -105,8 +110,59 @@ export default function Map() {
     setIsFormVisible(!isFormVisible);
   };
 
+  // Validate the inputs and print the locations
+  const printLocations = async () => {
+    // Validate if start and end locations are filled
+    if (!start.trim() || !end.trim()) {
+      toast.error("Start and End locations must be filled.");
+      return;
+    }
+  
+    // Validate if middle points are filled
+    for (const point of middlePoints) {
+      if (point.trim() === "") {
+        toast.error("All middle points must be filled.");
+        return;
+      }
+    }
+  
+    // If everything is valid, log the locations
+    const locations = [start, ...middlePoints.filter((p) => p.trim()), end];
+    console.log("Locations Data:", locations);
+    toast.info("Fetching the Optimal Route...");
+  
+    try {
+      // Sending locations array to the backend
+      const response = await fetch('http://localhost:3000/calculate-distance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ locations }),
+      });
+  
+      const data = await response.json();
+  
+      // Handle response from the backend
+      if (response.ok) {
+        console.log("Distance Matrix Response:", data);
+        toast.success("Distance Matrix fetched successfully!");
+        // You can further process the response here (e.g., display it on the UI)
+      } else {
+        toast.error(`Error: ${data.error || 'Failed to fetch distance matrix.'}`);
+      }
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+      toast.error("Error while fetching the route.");
+    }
+  };
+  
+
   return (
     <div className="pt-20 h-screen flex flex-col lg:flex-row">
+      {/* Toast Notifications */}
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar />
+
       {/* Map Section */}
       <div className="flex-grow relative">
         <div ref={mapContainer} className="w-full h-full" />
@@ -159,7 +215,7 @@ export default function Map() {
             {!showMiddlePoints ? (
               <button
                 onClick={() => setShowMiddlePoints(true)}
-                className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                className="mt-4 mb-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
               >
                 Add Middle Points
               </button>
@@ -181,16 +237,16 @@ export default function Map() {
                     />
                     <button
                       onClick={() => removeMiddlePoint(index)}
-                      className="bg-red-500 text-white px-3 py-1 rounded"
+                      className="bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center"
                     >
-                      Remove
+                      X
                     </button>
                   </div>
                 ))}
 
                 <button
                   onClick={addMiddlePoint}
-                  className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                  className="mt-4 mb-4 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
                 >
                   Add Another Middle Point
                 </button>
@@ -212,15 +268,23 @@ export default function Map() {
             </div>
 
             {/* Action Buttons */}
-            <button
-              onClick={() => {
-                addMarkers();
-                toggleForm();
-              }}
-              className="bg-green-500 text-white px-4 py-2 rounded mt-4"
-            >
-              Map Locations
-            </button>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => {
+                  addMarkers();
+                  toggleForm();
+                }}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+              >
+                Map Locations
+              </button>
+              <button
+                onClick={printLocations}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              >
+                Find Route
+              </button>
+            </div>
           </div>
         </div>
       </div>
