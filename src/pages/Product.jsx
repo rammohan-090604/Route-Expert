@@ -110,53 +110,128 @@ export default function Map() {
     setIsFormVisible(!isFormVisible);
   };
 
-  // Validate the inputs and print the locations
-  const printLocations = async () => {
-    // Validate if start and end locations are filled
-    if (!start.trim() || !end.trim()) {
-      toast.error("Start and End locations must be filled.");
+  // Validate the inputs and fetch the optimal route
+  // Function to process the response and draw the path
+const printLocations = async () => {
+  if (!start.trim() || !end.trim()) {
+    toast.error("Start and End locations must be filled.");
+    return;
+  }
+
+  for (const point of middlePoints) {
+    if (point.trim() === "") {
+      toast.error("All middle points must be filled.");
       return;
     }
-  
-    // Validate if middle points are filled
-    for (const point of middlePoints) {
-      if (point.trim() === "") {
-        toast.error("All middle points must be filled.");
-        return;
-      }
-    }
-  
-    // If everything is valid, log the locations
-    const locations = [start, ...middlePoints.filter((p) => p.trim()), end];
-    console.log("Locations Data:", locations);
-    toast.info("Fetching the Optimal Route...");
-  
-    try {
-      // Sending locations array to the backend
-      const response = await fetch('http://localhost:3000/calculate-distance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ locations }),
-      });
-  
-      const data = await response.json();
-  
-      // Handle response from the backend
-      if (response.ok) {
-        console.log("Distance Matrix Response:", data);
-        toast.success("Distance Matrix fetched successfully!");
-        // You can further process the response here (e.g., display it on the UI)
+  }
+
+  const locations = [start, ...middlePoints.filter((p) => p.trim()), end];
+  console.log("Locations Data:", locations);
+  toast.info("Fetching the Optimal Route...");
+
+  try {
+    const response = await fetch("http://localhost:3000/calculate-distance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ locations }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Distance Matrix Response:", data);
+      toast.success("Optimal Route fetched successfully!");
+
+      // Clear existing markers
+      markers.current.forEach((marker) => marker.remove());
+      markers.current = [];
+
+      const optimalRoute = data.optimalRoute;
+
+      if (optimalRoute && optimalRoute.length > 0) {
+        const routeCoordinates = [];
+
+        for (const stop of optimalRoute) {
+          const { location } = stop;
+
+          // Fetch coordinates for each location
+          const geoResponse = await fetch(
+            `https://api.maptiler.com/geocoding/${encodeURIComponent(
+              location
+            )}.json?key=${maptilersdk.config.apiKey}`
+          );
+          const geoData = await geoResponse.json();
+
+          if (geoData.features && geoData.features.length > 0) {
+            const [lon, lat] = geoData.features[0].geometry.coordinates;
+            routeCoordinates.push([lon, lat]);
+
+            // Add a marker for this location
+            const marker = new maptilersdk.Marker({ color: "#00FF00" })
+              .setLngLat([lon, lat])
+              .setPopup(new maptilersdk.Popup().setText(location)) // Add popup with location name
+              .addTo(map.current);
+            markers.current.push(marker);
+          } else {
+            toast.error(`Coordinates not found for "${location}".`);
+          }
+        }
+
+        // Draw the route on the map
+        drawRoute(routeCoordinates);
       } else {
-        toast.error(`Error: ${data.error || 'Failed to fetch distance matrix.'}`);
+        toast.error("No valid optimal route found in the response.");
       }
-    } catch (error) {
-      console.error("Error sending data to backend:", error);
-      toast.error("Error while fetching the route.");
+    } else {
+      toast.error(`Error: ${data.error || "Failed to fetch distance matrix."}`);
     }
-  };
-  
+  } catch (error) {
+    console.error("Error sending data to backend:", error);
+    toast.error("Error while fetching the route.");
+  }
+};
+
+// Draw route function
+const drawRoute = (coordinates) => {
+  if (map.current.getLayer("route")) {
+    map.current.removeLayer("route");
+  }
+  if (map.current.getSource("route")) {
+    map.current.removeSource("route");
+  }
+
+  // Add the route source
+  map.current.addSource("route", {
+    type: "geojson",
+    data: {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: coordinates,
+      },
+    },
+  });
+
+  // Add the route layer
+  map.current.addLayer({
+    id: "route",
+    type: "line",
+    source: "route",
+    layout: {
+      "line-join": "round",
+      "line-cap": "round",
+    },
+    paint: {
+      "line-color": "#FF5733",
+      "line-width": 4,
+    },
+  });
+
+  toast.success("Route drawn successfully on the map!");
+};
+
 
   return (
     <div className="pt-20 h-screen flex flex-col lg:flex-row">
@@ -166,7 +241,6 @@ export default function Map() {
       {/* Map Section */}
       <div className="flex-grow relative">
         <div ref={mapContainer} className="w-full h-full" />
-        {/* Up Arrow Button for Small Screens */}
         {!isFormVisible && (
           <button
             onClick={toggleForm}
@@ -181,9 +255,7 @@ export default function Map() {
       <div
         className={`lg:w-1/3 lg:static lg:block ${
           isFormVisible ? "fixed bottom-0 left-0 right-0" : "hidden"
-        } bg-gray-100 border-t lg:border-t-0 lg:border-l border-gray-300 transition-transform duration-500 lg:translate-y-0 ${
-          isFormVisible ? "translate-y-0" : "translate-y-full"
-        } lg:transition-none`}
+        } bg-gray-100 border-t lg:border-t-0 lg:border-l border-gray-300`}
       >
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
@@ -197,7 +269,6 @@ export default function Map() {
           </div>
 
           <div>
-            {/* Start Location */}
             <div className="mb-3">
               <label className="block text-lg font-semibold mb-1">
                 Start Location
@@ -211,11 +282,10 @@ export default function Map() {
               />
             </div>
 
-            {/* Middle Points Section */}
             {!showMiddlePoints ? (
               <button
                 onClick={() => setShowMiddlePoints(true)}
-                className="mt-4 mb-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="mt-4 mb-4 bg-blue-600 text-white px-6 py-3 rounded-lg"
               >
                 Add Middle Points
               </button>
@@ -232,29 +302,27 @@ export default function Map() {
                       onChange={(e) =>
                         handleMiddlePointChange(index, e.target.value)
                       }
-                      placeholder={`Point ${index + 1}`}
-                      className="flex-grow p-2 border border-gray-300 rounded mr-2"
+                      placeholder={`Middle Point ${index + 1}`}
+                      className="w-full p-2 border border-gray-300 rounded"
                     />
                     <button
                       onClick={() => removeMiddlePoint(index)}
-                      className="bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center"
+                      className="ml-2 px-2 py-1 bg-red-500 text-white rounded"
                     >
-                      X
+                      Remove
                     </button>
                   </div>
                 ))}
-
                 <button
                   onClick={addMiddlePoint}
-                  className="mt-4 mb-4 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                  className="bg-green-500 text-white px-4 py-2 rounded"
                 >
-                  Add Another Middle Point
+                  Add More
                 </button>
               </>
             )}
 
-            {/* End Location */}
-            <div className="mb-3">
+            <div className="mt-4 mb-3">
               <label className="block text-lg font-semibold mb-1">
                 End Location
               </label>
@@ -267,20 +335,16 @@ export default function Map() {
               />
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex space-x-4">
+            <div className="flex flex-col lg:flex-row gap-3">
               <button
-                onClick={() => {
-                  addMarkers();
-                  toggleForm();
-                }}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                onClick={addMarkers}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
               >
-                Map Locations
+                Add Markers
               </button>
               <button
                 onClick={printLocations}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="bg-green-500 text-white px-4 py-2 rounded"
               >
                 Find Route
               </button>
