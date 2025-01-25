@@ -110,8 +110,8 @@ export default function Map() {
     setIsFormVisible(!isFormVisible);
   };
 
-  // Validate the inputs and fetch the optimal route
   // Function to process the response and draw the path
+// Function to process the response and draw the path
 const printLocations = async () => {
   if (!start.trim() || !end.trim()) {
     toast.error("Start and End locations must be filled.");
@@ -152,9 +152,11 @@ const printLocations = async () => {
 
       if (optimalRoute && optimalRoute.length > 0) {
         const routeCoordinates = [];
+        const lineFeatures = [];
 
-        for (const stop of optimalRoute) {
-          const { location } = stop;
+        for (let i = 0; i < optimalRoute.length; i++) {
+          const stop = optimalRoute[i];
+          const { location, distance, duration } = stop;
 
           // Fetch coordinates for each location
           const geoResponse = await fetch(
@@ -168,19 +170,40 @@ const printLocations = async () => {
             const [lon, lat] = geoData.features[0].geometry.coordinates;
             routeCoordinates.push([lon, lat]);
 
-            // Add a marker for this location
+            // Add a marker for this location with a popup
             const marker = new maptilersdk.Marker({ color: "#00FF00" })
               .setLngLat([lon, lat])
-              .setPopup(new maptilersdk.Popup().setText(location)) // Add popup with location name
+              .setPopup(
+                new maptilersdk.Popup().setHTML(`
+                  <strong>${location}</strong><br>
+                  Distance: ${distance}<br>
+                  Duration: ${duration}
+                `)
+              )
               .addTo(map.current);
             markers.current.push(marker);
+
+            // Add line feature for distances between locations
+            if (i > 0) {
+              const prevCoordinates = routeCoordinates[i - 1];
+              lineFeatures.push({
+                type: "Feature",
+                geometry: {
+                  type: "LineString",
+                  coordinates: [prevCoordinates, [lon, lat]],
+                },
+                properties: {
+                  distance,
+                },
+              });
+            }
           } else {
             toast.error(`Coordinates not found for "${location}".`);
           }
         }
 
         // Draw the route on the map
-        drawRoute(routeCoordinates);
+        drawRoute(routeCoordinates, lineFeatures);
       } else {
         toast.error("No valid optimal route found in the response.");
       }
@@ -193,24 +216,35 @@ const printLocations = async () => {
   }
 };
 
-// Draw route function
-const drawRoute = (coordinates) => {
+// Draw route function with distances displayed
+const drawRoute = (coordinates, lineFeatures) => {
   if (map.current.getLayer("route")) {
     map.current.removeLayer("route");
   }
   if (map.current.getSource("route")) {
     map.current.removeSource("route");
   }
+  if (map.current.getLayer("route-labels")) {
+    map.current.removeLayer("route-labels");
+  }
+  if (map.current.getSource("route-labels")) {
+    map.current.removeSource("route-labels");
+  }
 
-  // Add the route source
+  // Add the route source for the line
   map.current.addSource("route", {
     type: "geojson",
     data: {
-      type: "Feature",
-      geometry: {
-        type: "LineString",
-        coordinates: coordinates,
-      },
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: coordinates,
+          },
+        },
+      ],
     },
   });
 
@@ -229,8 +263,37 @@ const drawRoute = (coordinates) => {
     },
   });
 
-  toast.success("Route drawn successfully on the map!");
+  // Add the distance labels source
+  map.current.addSource("route-labels", {
+    type: "geojson",
+    data: {
+      type: "FeatureCollection",
+      features: lineFeatures,
+    },
+  });
+
+  // Add the distance labels layer
+  map.current.addLayer({
+    id: "route-labels",
+    type: "symbol",
+    source: "route-labels",
+    layout: {
+      "text-field": ["get", "distance"],
+      "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+      "text-size": 14,
+      "symbol-placement": "line",
+      "text-offset": [0, 0.5],
+    },
+    paint: {
+      "text-color": "#000000",
+      "text-halo-color": "#ffffff",
+      "text-halo-width": 2,
+    },
+  });
+
+  toast.success("Route and distances drawn successfully on the map!");
 };
+
 
 
   return (
